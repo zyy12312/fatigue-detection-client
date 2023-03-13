@@ -1,0 +1,135 @@
+<html class="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <script src="static/js/vue.global.js"></script>
+    <link rel="stylesheet" href="static/css/element-plus.css">
+    <script src="static/js/element-plus.js"></script>
+    <script src="static/js/zxing.js"></script>
+    <style>
+        #app {
+            text-align: center;
+        }
+
+        .welcome {
+            padding: 10px;
+        }
+
+        .video-frame {
+            width: 90%;
+            margin: auto auto;
+            max-height: 70vh;
+            min-height: 30%;
+            border: 1px solid #DCDFE6;
+            border-radius: 5px;
+            background-color: #EBEEF5;
+        }
+
+        .video {
+            width: 100%;
+            height: 100%;
+            max-height: 70vh;
+        }
+
+        .selection {
+            padding: 10px;
+        }
+
+        .error {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            background: var(--el-fill-color-light);
+            color: var(--el-text-color-placeholder);
+            vertical-align: middle;
+            height: 100%;
+        }
+    </style>
+    <title>Monitor</title>
+</head>
+<body>
+<div id="app">
+    <div class="welcome">
+        欢迎您，<span>{{username}}</span>&nbsp;
+        <el-button link type="primary" @click="logout">登出</el-button>
+    </div>
+    <div class="video-frame">
+        <el-image :src="vidSrc" class="video" fit="contain">
+            <template v-slot:error>
+                <div class="error">
+                    选择摄像头后，点击“开始”以启动
+                </div>
+            </template>
+        </el-image>
+    </div>
+    <div class="selection">
+        选择摄像头：
+        <el-select v-model="cameraId" placeholder="摄像头">
+            <el-option
+                    v-for="item in cameras"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"></el-option>
+        </el-select>
+    </div>
+    <div class="buttons">
+        <el-button type="primary" :loading="startLoading" :disabled="stopLoading" @click="start">开始</el-button>
+        <el-button type="danger" :loading="stopLoading" :disabled="startLoading" @click="stop">停止</el-button>
+    </div>
+</div>
+<script>
+    document.oncontextmenu = () => false;
+    const App = {
+        async mounted() {
+            window.addEventListener('pywebviewready', async () => {
+                this.cameras = await pywebview.api.getCameraList();
+                this.userData = await pywebview.api.getUser();
+                this.username = this.userData.username;
+            })
+        },
+        data() {
+            return {
+                username: 'Loading',
+                vidSrc: '',
+                cameras: [],
+                cameraId: null,
+                startLoading: false,
+                stopLoading: false,
+                userData: null
+            };
+        },
+        methods: {
+            async start() {
+                if (this.cameraId === null) {
+                    this.$message.error('请先选择摄像头');
+                    return
+                }
+                console.log(this.cameraId);
+                this.startLoading = true;
+                let ret = await pywebview.api.getCameraURL(this.cameraId);
+                if (!ret.success) {
+                    this.$message.error(ret.message);
+                    return
+                }
+                this.vidSrc = ret.url;
+                this.startLoading = false;
+            },
+            async stop() {
+                this.stopLoading = true;
+                await pywebview.api.stopCapture();
+                this.vidSrc = '';
+                this.stopLoading = false;
+            },
+            logout() {
+                pywebview.api.logout();
+            }
+        }
+    };
+    const app = Vue.createApp(App);
+    app.use(ElementPlus);
+    app.mount("#app");
+
+</script>
+</body>
+</html>

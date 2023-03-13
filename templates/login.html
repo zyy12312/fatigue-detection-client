@@ -1,0 +1,150 @@
+<html class="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <script src="static/js/vue.global.js"></script>
+    <link rel="stylesheet" href="static/css/element-plus.css">
+    <script src="static/js/element-plus.js"></script>
+    <style>
+        .login_panel {
+            padding: 10px;
+        }
+
+        .login_panel .title {
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        .login_panel .button-panel {
+            text-align: center;
+        }
+
+        .login_panel .form .center {
+            text-align: center;
+        }
+    </style>
+    <title>Login</title>
+</head>
+<body>
+<div id="app">
+    <div class="login_panel">
+        <el-alert title="登录成功" type="success" v-if="loginStatus=='success'" :closable="false"></el-alert>
+        <el-alert :title="failedReason" type="error" v-if="loginStatus=='failed'" :closable="false"></el-alert>
+        <div class="title">系统登录</div>
+        <div class="form">
+            <el-form ref="login"
+                     label-position="right"
+                     label-width="70px"
+                     :model="loginForm"
+                     :rules="loginFormRules"
+                     :disabled="this.loginStatus=='loading'">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="loginForm.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="loginForm.password" type="password"></el-input>
+                </el-form-item>
+                <div class="center">
+                    <el-checkbox label="记住密码" name="type" v-model="loginForm.rememberPassword"></el-checkbox>
+                    <el-checkbox label="自动登录" name="type" v-model="loginForm.autoLogin"></el-checkbox>
+                </div>
+            </el-form>
+        </div>
+        <div class="button-panel">
+            <el-button type="primary" @click="login" :loading="this.loginStatus=='loading'">登录</el-button>
+            <el-button @click="exit">取消</el-button>
+        </div>
+    </div>
+</div>
+<script>
+    document.oncontextmenu = () => false;
+    const App = {
+        async mounted() {
+            window.addEventListener('pywebviewready', async () => {
+                console.log("Load data.");
+                let data = await pywebview.api.getUser();
+                if (data) {
+                    this.loginForm = {
+                        ...this.loginForm,
+                        username: data.username,
+                        password: data.password,
+                        rememberPassword: data.password.length > 0,
+                        autoLogin: data.password.length > 0 && data.login
+                    }
+                    if (this.loginForm.autoLogin) {
+                        this.login(true);
+                    }
+                }
+            })
+
+        },
+        data() {
+            return {
+                failedReason: '',
+                loginStatus: '',
+                loginForm: {
+                    username: '',
+                    password: '',
+                    rememberPassword: false,
+                    autoLogin: false
+                },
+                loginFormRules: {
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'submit'},
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'submit'},
+                        {min: 6, message: '密码不正确', trigger: 'submit'},
+                    ],
+                }
+            };
+        },
+        methods: {
+            exit() {
+                pywebview.api.quit();
+            },
+            async doLogin() {
+                this.loginStatus = 'loading';
+                try {
+                    let result = await pywebview.api.doLogin(
+                        this.loginForm.username,
+                        this.loginForm.password,
+                        this.loginForm.rememberPassword,
+                        this.loginForm.autoLogin
+                    );
+                    if (!result.success) {
+                        this.loginStatus = 'failed';
+                        this.failedReason = result.message;
+                    } else {
+                        this.loginStatus = 'success';
+                    }
+                } catch (err) {
+                    this.loginStatus = 'failed';
+                    this.failedReason = err;
+                }
+            },
+            login(noValid) {
+                if (this.loginForm.autoLogin) {
+                    this.loginForm.rememberPassword = true;
+                }
+                if (noValid) {
+                    this.doLogin()
+                } else {
+                    this.$refs.login.validate((valid, fields) => {
+                        if (valid) {
+                            this.doLogin()
+                        }
+                    })
+                }
+            }
+        }
+    };
+    const app = Vue.createApp(App);
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+</body>
+</html>
