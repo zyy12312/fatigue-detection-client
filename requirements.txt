@@ -23,6 +23,6 @@ pywebview==4.0.1
 requests==2.28.2
 setuptools==65.5.1
 urllib3==1.26.14
-Werkzeug==2.2.2
+Werkzeug==2.2.3
 wheel==0.38.1
 zipp==3.12.0
