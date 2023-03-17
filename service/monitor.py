@@ -8,6 +8,7 @@ from utils.thread import stop_thread
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "true"
 import pygame.camera
+from AI.api.PictureDetect import FatigueDetection
 
 CAPTURE_THREAD: threading.Thread = None
 
@@ -21,6 +22,7 @@ def getCameraList():
 
 class VideoCamera(object):
     def __init__(self, camera):
+        self.fatigue_detection = FatigueDetection(carry_img=True, model_path="./weights/ssd_voc_5000_plus.pth")
         logger.info("Start Video Capture on Camera-" + str(camera))
         self.cap = cv2.VideoCapture(camera)
 
@@ -30,6 +32,8 @@ class VideoCamera(object):
 
     def get_frame(self):
         success, image = self.cap.read()
+        res, image = self.fatigue_detection.check_picture(image)
+        logger.info(res)
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
 
