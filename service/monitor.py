@@ -2,14 +2,12 @@ import os
 import threading
 from utils.logger import logger
 import cv2
-
 from utils.network import getFreePort
 from utils.thread import stop_thread
-
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "true"
 import pygame.camera
 from AI.api.PictureDetect import FatigueDetection
 
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "true"
 CAPTURE_THREAD: threading.Thread = None
 
 
