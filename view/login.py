@@ -65,6 +65,7 @@ class JsAPI:
 
 
 def getLogin():
+
     global loginWindow
     loginWindow = webview.create_window("登录",
                                         "templates/login.html",
