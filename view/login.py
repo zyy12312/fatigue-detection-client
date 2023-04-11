@@ -37,6 +37,7 @@ class JsAPI:
             service.user.USER = u
             logger.info('Logged in successfully, token=%s***' % u.token[:3])
             saveUser(save)
+            # ! 跳转
             loginWindow.hide()
             view.monitor.getMonitorWindow()
             return {
