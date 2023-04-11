@@ -115,7 +115,7 @@ class FatigueDetection:
                 self.list_Y = np.append(self.list_Y, 0)
             self.list_Y = np.delete(self.list_Y, 0)
         else:
-            ret = {'error': {'code': 10, 'message': 'people leave'}}
+            ret = {'error': {'code': 10, 'message': 'people leave'}, "time": time.time()}
             if self.carry_img:
                 return ret, img
             else:
@@ -158,7 +158,7 @@ class FatigueDetection:
         elif self.yawn_freq > 5.0 / 60:
             ret["is_tired"] = True
             self.yawn_freq = 0  # 初始化，同上
-        ret["time"] = time.time() - start
+        ret["time"] = time.time()
         if self.carry_img:
             return ret, img
         return ret
