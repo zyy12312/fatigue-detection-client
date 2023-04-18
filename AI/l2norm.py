@@ -6,6 +6,7 @@ import torch.nn.init as init
 from . import Config
 class L2Norm(nn.Module):
     def __init__(self,n_channels, scale):
+        torch.device('mps')
         super(L2Norm,self).__init__()
         self.n_channels = n_channels
         self.gamma = scale or None

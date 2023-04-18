@@ -15,6 +15,7 @@ MODEL_PATH = '../weights/ssd_voc_5000_plus.pth'
 
 class FatigueDetection:
     def __init__(self, model_path: str = MODEL_PATH, carry_img: bool = False):
+        torch.device("mps")
         # 检测cuda是否可用
         if torch.cuda.is_available():
             torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -86,6 +87,7 @@ class FatigueDetection:
             j = 0
             while detections[0, i, j, 0] >= 0.2:
                 score = detections[0, i, j, 0]
+                print(type(score))
                 label_name = labels[i - 1]
                 if label_name == 'closed_eye':
                     flag_B = False
@@ -95,7 +97,8 @@ class FatigueDetection:
                 display_txt = '%s:%.2f' % (label_name, score)
                 pt = (detections[0, i, j, 1:] * scale).cpu().numpy()
                 color = self.colors_tableau[i]
-                cv2.rectangle(img, (pt[0], pt[1]), (pt[2], pt[3]), color, 2)
+                print((float)(pt[0]))
+                cv2.rectangle(img, (((int)(pt[0])),((int)(pt[1]))), (((int)(pt[2])),((int)(pt[3]))), color, 2)
                 cv2.putText(img, display_txt, (int(pt[0]), int(pt[1]) + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
                             (255, 255, 255),
                             1, 8)
