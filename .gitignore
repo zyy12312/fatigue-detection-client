@@ -1,6 +1,9 @@
 # 项目排除路径
+/.idea
+/logs
 /build/
 /dist/
 /**/**.log
 /AI/weights
 /AI/dataset
+/data

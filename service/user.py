@@ -1,7 +1,9 @@
 import pickle
 
+import Config
 from utils.logger import logger
 from config.data import USER_PATH
+import requests
 
 
 class User:
@@ -9,18 +11,28 @@ class User:
     password: str
     token: str
     loginStatus: bool
+    expire: int
 
     def __init__(self):
         pass
 
 
 def userLogin(u: User):
-    # todo: 判断登录
-    if u.username == 'admin' and u.password == '123456':
-        u.token = 'token'
-        u.loginStatus = True
+    if Config.DEBUG:
+        if u.username == 'admin' and u.password == '123456':
+            u.token = 'token'
+            u.loginStatus = True
+        else:
+            raise Exception("用户名或密码错误")
     else:
-        raise Exception("用户名或密码错误")
+        ret = requests.post(f"{Config.BASE_URL}/api/v1/users/login",
+                            data={"username": u.username, "password": u.password}).json()
+        if ret["code"] == 200:
+            u.token = ret["data"]["token"]
+            u.loginStatus = True
+            u.expire = ret["data"]["expire"] // 1000
+        else:
+            raise Exception("用户名或密码错误")
 
 
 def saveUser(u: User):
@@ -53,4 +65,5 @@ def getToken():
     return USER.token
 
 
+updateToken = userLogin
 USER = User()
