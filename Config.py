@@ -1,4 +1,5 @@
 DEBUG = True
-HOST = "127.0.0.1"
-PORT = 8080
+HOST = "124.222.69.102"
+PORT = 40001
 BASE_URL = f"http://{HOST}:{PORT}"
+

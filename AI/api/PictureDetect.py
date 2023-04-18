@@ -1,3 +1,6 @@
+from threading import Timer
+
+import webview
 from torch.autograd import Variable
 from ..detection import *
 from ..ssd_net_vgg import *
@@ -12,10 +15,13 @@ import time
 
 MODEL_PATH = '../weights/ssd_voc_5000_plus.pth'
 
+monitorWindow: webview.Window
 
 class FatigueDetection:
+
     def __init__(self, model_path: str = MODEL_PATH, carry_img: bool = False):
-        torch.device("mps")
+
+        ##torch.device("mps")
         # 检测cuda是否可用
         if torch.cuda.is_available():
             torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -85,7 +91,7 @@ class FatigueDetection:
         scale = torch.Tensor(img.shape[1::-1]).repeat(2)
         for i in range(detections.size(1)):
             j = 0
-            while detections[0, i, j, 0] >= 0.2:
+            while detections[0, i, j, 0] >= 0.4:
                 score = detections[0, i, j, 0]
                 print(type(score))
                 label_name = labels[i - 1]
@@ -162,20 +168,29 @@ class FatigueDetection:
             ret["is_tired"] = True
             self.yawn_freq = 0  # 初始化，同上
         ret["time"] = time.time()
+        self.countTimes(ret)
         if self.carry_img:
             return ret, img
         return ret
 
+def showResult(self):
+    ret, img = cap.read()  # 读取图片
+    cv2.imshow("ssd", img)
+    print(derector.check_picture(img), flush=True)
+    if cv2.waitKey(100) & 0xff == ord('q'):
+        cap.release()
+        cv2.destroyAllWindows()
+
+##def generateNetPackage(self):
 
 if __name__ == "__main__":
     derector = FatigueDetection(MODEL_PATH)
     cap = cv2.VideoCapture(0)
     while True:
-        ret, img = cap.read()  # 读取图片
-        cv2.imshow("ssd", img)
-        print(derector.check_picture(img), flush=True)
-        if cv2.waitKey(100) & 0xff == ord('q'):
+        ###showResult()
+        Timer(0.4, showResult(), ()).start()
+        ###time.sleep(0.4)
+        if False:
             break
-        time.sleep(0.4)
     cap.release()
     cv2.destroyAllWindows()

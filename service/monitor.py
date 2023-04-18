@@ -1,5 +1,7 @@
 import os
 import threading
+
+from utils.StateCounter import StateCounter
 from utils.logger import logger
 import cv2
 from utils.network import getFreePort
@@ -19,8 +21,9 @@ def getCameraList():
 
 
 class VideoCamera(object):
-    def __init__(self, camera):
+    def __init__(self, camera,record_id):
         self.fatigue_detection = FatigueDetection(carry_img=True, model_path="./weights/ssd_voc_5000_plus.pth")
+        self.stateCounter = StateCounter(record_id)
         logger.info("Start Video Capture on Camera-" + str(camera))
         self.cap = cv2.VideoCapture(camera)
 
