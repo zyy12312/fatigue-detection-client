@@ -18,6 +18,45 @@
         .courses {
             width: 90%;
             margin: auto auto;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .course {
+            width: 30%;
+            margin: 1.5%;
+        }
+
+        .time {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .bottom {
+            margin-top: 13px;
+            line-height: 12px;
+        }
+
+        .button {
+            padding: 0;
+            float: right;
+            font-size: 16px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+        .card-passage{
+            white-space: pre-wrap;
+            text-align: left;
+            margin: 5%;
         }
     </style>
     <title>Monitor</title>
@@ -29,7 +68,17 @@
         <el-button link type="primary" @click="logout">登出</el-button>
     </div>
     <div class="courses">
-
+        <el-card :body-style="{ padding: '0px' }" v-for="course in courseList" class="course">
+            <div style="padding: 14px;">
+                <h1 class="card-title">{{course.course_name}}</h1>
+                <p class="card-passage" style="height: 30%;"><strong>课程描述：</strong><br>{{course.course_description}}</p>
+                <p class="card-passage"><strong>老师：</strong>{{course.teacher_name}}</p>
+                <div class="bottom clearfix">
+                    <el-button v-if="course.status" type="text" class="button" @click="doStartLesson(course.record_id)">进入课程</el-button>
+                    <el-button v-else type="text" class="button" style="color: gray">进入课程</el-button>
+                </div>
+            </div>
+        </el-card>
     </div>
 </div>
 <script>
@@ -48,16 +97,55 @@
                 courseList: [{
                     "record_id": "114514",
                     "course_name": "Genshin Impact",
-                    "course_description": "Game Theory of Genshin Impact",
+                    "course_description": "向着星辰与深渊",
                     "teacher_name": "Amber",
                     "status": 1
+                }, {
+                    "record_id": "1919",
+                    "course_name": "高等元素论",
+                    "course_description": "单位元素量与元素附着,",
+                    "teacher_name": "Albedo",
+                    "status": 1
+                }, {
+                    "record_id": "810",
+                    "course_name": "瞬大与凹分",
+                    "course_description": "1. 兄弟我学会瞬大了 21883 + 160\n" +
+                        "2. 兄弟我不想学瞬大 21876 + 143\n" +
+                        "3. 兄弟们给我条活路 21873 + 126\n" +
+                        "4. 求求你们别凹了 21870 + 109?",
+                    "teacher_name": "赤鸢仙人",
+                    "status": 0
+                },{
+                    "record_id": "2233",
+                    "course_name": "坎瑞亚历史概述",
+                    "course_description": "树与海的知识",
+                    "teacher_name": "深渊王子",
+                    "status": 0
+                },{
+                    "record_id": "2333",
+                    "course_name": "高等丘丘语",
+                    "course_description": "Mosi mita!",
+                    "teacher_name": "艾拉·马斯克",
+                    "status": 0
                 }],
                 userData: null
             };
         },
         methods: {
-             logout() {
+            logout() {
                 pywebview.api.logout();
+            },
+            async doStartLesson(courseId) {
+                for (const course of this.courseList) {
+                    if (course.record_id === courseId) {
+                        pywebview.api.doStartLesson(course)
+                        return
+                    }
+                }
+                this.$message({
+                    message: `找不到课程id为${courseId}的课程`,
+                    type: 'error'
+                })
             }
         }
     }
