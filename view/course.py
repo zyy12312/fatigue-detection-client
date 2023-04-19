@@ -20,7 +20,7 @@ class JsAPI:
 
     def getCourseList(self):
         logger.info("Load Course List From HTTP Port")
-        ret = service.course.getCourseList(user.USER)
+        ret = service.course.getCourseList()
         if not ret:
             return None
         return ret.json()

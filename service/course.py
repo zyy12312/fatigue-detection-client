@@ -1,6 +1,7 @@
 import requests
 
 import Config
+from service import user
 from service.user import User
 
 
@@ -12,9 +13,9 @@ class course:
     status : int
     def __init__(self):
         pass
-def getCourseList(u : User):
+def getCourseList():
     ret = requests.post(f"{Config.BASE_URL}/api/v1/records/list",
-                        data=u.token).json()
+                        data=user.USER.token).json()
     if ret["code"] == 200:
         course_list = []
         for i in ret["data"]["list"]:
