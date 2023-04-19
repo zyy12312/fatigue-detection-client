@@ -31,7 +31,29 @@ class JsAPI:
             'token': user.USER.token
         }
 
-
+    def doStartCourse(self,course:service.course.course):
+        try:
+            if course is not None or course.status ==0:
+                logger.info('Select Failed, selected course is None Or course is not time' % course.course_name)
+                return {
+                    'success': False,
+                    'message': 'Course status Error'
+                }
+            else:
+                logger.info('Select successfully, selected course is:' % course.course_name)
+            # ! 跳转
+                courseWindow.hide()
+                view.monitor.getMonitorWindow()
+                return {
+                    'success': True,
+                    'message': 'ok'
+                }
+        except Exception as e:
+            logger.warn('Error, message: %s' % e)
+            return {
+                'success': False,
+                'message': str(e)
+            }
 def quitSystem():
     logger.info("Close Button Pressed, System Closing...")
     if view.login.loginWindow:
@@ -51,4 +73,3 @@ def getCourseWindow():
     return courseWindow
 
 
-def doStartCourse():
