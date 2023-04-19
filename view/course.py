@@ -43,7 +43,7 @@ class JsAPI:
                 logger.info('Select successfully, selected course is:' % course.course_name)
             # ! 跳转
                 courseWindow.hide()
-                view.monitor.getMonitorWindow()
+                view.monitor.getMonitorWindow(course)
                 return {
                     'success': True,
                     'message': 'ok'
