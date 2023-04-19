@@ -2,6 +2,7 @@ import sys
 
 import webview
 
+import service.course
 import view.login
 from config.data import DEBUG
 import service.monitor as monitor
@@ -69,7 +70,7 @@ def quitSystem():
     sys.exit()
 
 
-def getMonitorWindow():
+def getMonitorWindow(course : service.course.course):
     from __main__ import SYSTEM_PORT
     global monitorWindow
     monitorWindow = webview.create_window("监控界面",

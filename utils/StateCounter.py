@@ -9,8 +9,8 @@ import Config
 
 class StateCounter:
     def __init__(self, recordId:str):
-        self.tired = 1
-        self.leave = 2
+        self.tired = 0
+        self.leave = 0
         self.normal = 0
         #self.sum = 0
         self.record = recordId
