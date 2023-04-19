@@ -1,0 +1,38 @@
+<html class="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <script src="static/js/vue.global.js"></script>
+    <link rel="stylesheet" href="static/css/element-plus.css">
+    <script src="static/js/element-plus.js"></script>
+    <script src="static/js/zxing.js"></script>
+    <style></style>
+    <title>Monitor</title>
+</head>
+<body>
+<div id="app">
+
+</div>
+<script>
+    document.oncontextmenu = () => false;
+    const App = {
+        async mounted() {
+            window.addEventListener('pywebviewready', async () => {
+                this.courseList = await pywebview.api.getCourseList()
+                this.userData = await pywebview.api.getUser()
+                this.username = this.userData.username
+            })
+        },data() {
+            return {
+                username: 'Loading',
+                courseList: [],
+                cameraId: null,
+                startLoading: false,
+                stopLoading: false,
+                userData: null
+            };
+        },
+    }
+</script>
+</body>
+</html>
