@@ -52,16 +52,7 @@ class JsAPI:
                 'message': str(e)
             }
 
-    def getUser(self):
-        logger.info("Load User From File")
-        ret = getLoginStatus()
-        if not ret:
-            return None
-        return {
-            'username': ret.username,
-            'password': ret.password,
-            'login': ret.loginStatus
-        }
+
 
 
 def getLogin():
