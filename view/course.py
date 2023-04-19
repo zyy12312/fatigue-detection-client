@@ -31,7 +31,7 @@ class JsAPI:
             'token': user.USER.token
         }
 
-    def doStartCourse(self,course:service.course.course):
+    def doStartCourse(self,course : service.course.course):
         try:
             if course is not None or course.status ==0:
                 logger.info('Select Failed, selected course is None Or course is not time' % course.course_name)
@@ -84,5 +84,3 @@ def getCourseWindow():
     courseWindow.events.closed += quitSystem
     return courseWindow
 
-
-def doStartCourse():
