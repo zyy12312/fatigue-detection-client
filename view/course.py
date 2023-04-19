@@ -31,6 +31,17 @@ class JsAPI:
             'token': user.USER.token
         }
 
+    def logout(self):
+        save = user.USER
+        save.loginStatus = False
+        user.saveUser(save)
+        user.USER.loginStatus = False
+        user.USER.token = None
+        view.login.loginWindow.show()
+        view.login.loginWindow.evaluate_js("location.reload()")
+        courseWindow.events.closed -= quitSystem
+        courseWindow.destroy()
+
 
 def quitSystem():
     logger.info("Close Button Pressed, System Closing...")
