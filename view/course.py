@@ -3,7 +3,7 @@ import sys
 import webview
 
 from service import user
-import service.user,service.course
+import service.user, service.course
 from utils.logger import logger
 import view.monitor
 
@@ -25,6 +25,12 @@ class JsAPI:
             return None
         return ret.json()
 
+    def getUser(self):
+        return {
+            'username': user.USER.username,
+            'token': user.USER.token
+        }
+
 
 def quitSystem():
     logger.info("Close Button Pressed, System Closing...")
@@ -42,7 +48,6 @@ def getCourseWindow():
                                          resizable=False,
                                          js_api=JsAPI())
     courseWindow.events.closed += quitSystem
-
     return courseWindow
 
 
