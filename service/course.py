@@ -6,13 +6,14 @@ from service.user import User
 
 
 class course:
-    record_id : str
-    course_name : str
-    course_description : str
-    teacher_name : str
-    status : int
+
     def __init__(self):
-        pass
+        self.record_id: str
+        self.course_name: str
+        self.course_description: str
+        self.teacher_name: str
+        self.status: int
+
 def getCourseList():
     ret = requests.post(f"{Config.BASE_URL}/api/v1/records/list",
                         data=user.USER.token).json()

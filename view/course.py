@@ -33,7 +33,7 @@ def quitSystem():
     sys.exit()
 
 
-def getCourseList():
+def getCourseWindow():
     global courseWindow
     courseWindow = webview.create_window("课程列表",
                                          "templates/login.html",
@@ -44,3 +44,6 @@ def getCourseList():
     courseWindow.events.closed += quitSystem
 
     return courseWindow
+
+
+def doStartCourse():
