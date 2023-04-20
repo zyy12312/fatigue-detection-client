@@ -6,6 +6,7 @@ from service.user import User, userLogin, saveUser, getLoginStatus
 import service.user
 from utils.logger import logger
 import view.monitor
+import view.course
 
 loginWindow: webview.Window
 
@@ -39,7 +40,8 @@ class JsAPI:
             saveUser(save)
             # ! 跳转
             loginWindow.hide()
-            view.monitor.getMonitorWindow()
+            view.course.getCourseWindow()
+            # view.monitor.getMonitorWindow()
             return {
                 'success': True,
                 'message': 'ok'
@@ -53,15 +55,12 @@ class JsAPI:
             }
 
 
-
-
 def getLogin():
-
     global loginWindow
     loginWindow = webview.create_window("登录",
                                         "templates/login.html",
-                                        width=440,
-                                        height=440,
+                                        width=800,
+                                        height=600,
                                         resizable=False,
                                         js_api=JsAPI())
     return loginWindow

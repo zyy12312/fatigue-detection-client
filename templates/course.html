@@ -17,10 +17,12 @@
 
         .courses {
             width: 90%;
+            height: 85%;
             margin: auto auto;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            overflow-y:auto;
         }
 
         .course {
@@ -72,7 +74,8 @@
         <el-card :body-style="{ padding: '0px' }" v-for="course in courseList" class="course">
             <div style="padding: 14px;">
                 <h1 class="card-title">{{course.course_name}}</h1>
-                <p class="card-passage" style="min-height: 30%;"><strong>课程描述：</strong><br>{{course.course_description}}
+                <p class="card-passage" style="min-height: 30%;">
+                    <strong>课程描述：</strong><br>{{course.course_description}}
                 </p>
                 <p class="card-passage"><strong>老师：</strong>{{course.teacher_name}}</p>
                 <div class="bottom clearfix">
@@ -99,38 +102,35 @@
             return {
                 username: 'Loading',
                 courseList: [{
-                    "record_id": "114514",
-                    "course_name": "Genshin Impact",
-                    "course_description": "向着星辰与深渊",
-                    "teacher_name": "Amber",
+                    "record_id": "1",
+                    "course_name": "test1",
+                    "course_description": "1111111",
+                    "teacher_name": "124",
                     "status": 1
-                }, {
-                    "record_id": "1919",
-                    "course_name": "高等元素论",
-                    "course_description": "单位元素量与元素附着,",
-                    "teacher_name": "Albedo",
+                },{
+                    "record_id": "2",
+                    "course_name": "test1",
+                    "course_description": "1111111",
+                    "teacher_name": "124",
+                    "status": 0
+                },{
+                    "record_id": "3",
+                    "course_name": "test1",
+                    "course_description": "1111111",
+                    "teacher_name": "124",
                     "status": 1
-                }, {
-                    "record_id": "810",
-                    "course_name": "瞬大与凹分",
-                    "course_description": "1. 兄弟我学会瞬大了 21883 + 160\n" +
-                        "2. 兄弟我不想学瞬大 21876 + 143\n" +
-                        "3. 兄弟们给我条活路 21873 + 126\n" +
-                        "4. 求求你们别凹了 21870 + 109?",
-                    "teacher_name": "赤鸢仙人",
+                },{
+                    "record_id": "4",
+                    "course_name": "test1",
+                    "course_description": "1111111",
+                    "teacher_name": "124",
                     "status": 0
-                }, {
-                    "record_id": "2233",
-                    "course_name": "坎瑞亚历史概述",
-                    "course_description": "树与海的知识",
-                    "teacher_name": "深渊王子",
-                    "status": 0
-                }, {
-                    "record_id": "2333",
-                    "course_name": "高等丘丘语",
-                    "course_description": "Mosi mita!",
-                    "teacher_name": "艾拉·马斯克",
-                    "status": 0
+                },{
+                    "record_id": "5",
+                    "course_name": "test1",
+                    "course_description": "1111111",
+                    "teacher_name": "124",
+                    "status": 1
                 }],
                 userData: null
             };
@@ -144,7 +144,7 @@
                 //console.log(courseId)
                 for (const course of this.courseList) {
                     if (course.record_id === courseId) {
-                        pywebview.api.doStartLesson(course)
+                        pywebview.api.doStartCourse(course)
                         return
                     }
                 }

@@ -31,9 +31,9 @@ class JsAPI:
             'token': user.USER.token
         }
 
-    def doStartCourse(self,course : service.course.course):
+    def doStartCourse(self, course: service.course.course):
         try:
-            if course is not None or course.status ==0:
+            if course is not None or course.status == 0:
                 logger.info('Select Failed, selected course is None Or course is not time' % course.course_name)
                 return {
                     'success': False,
@@ -41,7 +41,7 @@ class JsAPI:
                 }
             else:
                 logger.info('Select successfully, selected course is:' % course.course_name)
-            # ! 跳转
+                # ! 跳转
                 courseWindow.hide()
                 view.monitor.getMonitorWindow(course)
                 return {
@@ -54,6 +54,7 @@ class JsAPI:
                 'success': False,
                 'message': str(e)
             }
+
     def logout(self):
         save = user.USER
         save.loginStatus = False
@@ -76,11 +77,10 @@ def quitSystem():
 def getCourseWindow():
     global courseWindow
     courseWindow = webview.create_window("课程列表",
-                                         "templates/login.html",
-                                         width=440,
-                                         height=440,
-                                         resizable=False,
+                                         "templates/course.html",
+                                         width=1096,
+                                         height=980,
+                                         resizable=True,
                                          js_api=JsAPI())
     courseWindow.events.closed += quitSystem
     return courseWindow
-
