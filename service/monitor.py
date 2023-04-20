@@ -1,6 +1,7 @@
 import os
 import threading
 
+import view.monitor
 from utils.StateCounter import StateCounter
 from utils.logger import logger
 import cv2
@@ -21,7 +22,8 @@ def getCameraList():
 
 
 class VideoCamera(object):
-    def __init__(self, camera,record_id):
+    def __init__(self, camera, record_id):
+        logger.info({"camera": camera, "record_id": record_id})
         self.fatigue_detection = FatigueDetection(carry_img=True, model_path="./weights/ssd_voc_5000_plus.pth")
         self.stateCounter = StateCounter(record_id)
         logger.info("Start Video Capture on Camera-" + str(camera))
@@ -71,7 +73,7 @@ def getFlaskThread(camera):
 
 
 def startMonitoring(cameraId):
-    camera = VideoCamera(cameraId)
+    camera = VideoCamera(cameraId, view.monitor.COURSE.record_id)
     # todo
     port = getFlaskThread(camera)
     return "http://127.0.0.1:" + str(port)

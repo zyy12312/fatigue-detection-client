@@ -168,12 +168,12 @@ class FatigueDetection:
             ret["is_tired"] = True
             self.yawn_freq = 0  # 初始化，同上
         ret["time"] = time.time()
-        self.countTimes(ret)
+        #self.countTimes(ret)
         if self.carry_img:
             return ret, img
         return ret
 
-def showResult(self):
+def showResult():
     ret, img = cap.read()  # 读取图片
     cv2.imshow("ssd", img)
     print(derector.check_picture(img), flush=True)

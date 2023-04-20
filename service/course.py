@@ -5,14 +5,15 @@ from service import user
 from service.user import User
 
 
-class course:
+class Course:
+    def __init__(self, record_id: str = None, course_name: str = None, course_description: str = None,
+                 teacher_name: str = None, status: int = 0):
+        self.record_id = record_id
+        self.course_name = course_name
+        self.course_description = course_description
+        self.teacher_name = teacher_name
+        self.status = status
 
-    def __init__(self):
-        self.record_id: str
-        self.course_name: str
-        self.course_description: str
-        self.teacher_name: str
-        self.status: int
 
 def getCourseList():
     ret = requests.post(f"{Config.BASE_URL}/api/v1/records/list",
@@ -20,12 +21,13 @@ def getCourseList():
     if ret["code"] == 200:
         course_list = []
         for i in ret["data"]["list"]:
-            t = course()
-            t.record_id = i["_id"]
-            t.course_name = i["course"]["course_name"]
-            t.course_description = i["course"]["description"]
-            t.teacher_name = i["teacher"]["username"]
-            t.status = int(i["status"])
+            t = Course(
+                record_id=i["_id"],
+                course_name=i["course"]["course_name"],
+                course_description=i["course"]["description"],
+                teacher_name=i["teacher"]["username"],
+                status=int(i["status"]),
+            )
             course_list.append(t)
         # u.loginStatus = True
         # u.expire = ret["data"]["expire"] // 1000
