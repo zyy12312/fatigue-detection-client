@@ -31,10 +31,10 @@ class JsAPI:
             'token': user.USER.token
         }
 
-    def doStartCourse(self,course : service.course.course):
+    def doStartCourse(self,course : dict):
         try:
-            if course is not None or course.status ==0:
-                logger.info('Select Failed, selected course is None Or course is not time' % course.course_name)
+            if course is not None or course["status"] ==0:
+                logger.info('Select Failed, selected course is None Or course is not time' % course["course_name"])
                 return {
                     'success': False,
                     'message': 'Course status Error'
