@@ -31,17 +31,19 @@ class JsAPI:
             'token': user.USER.token
         }
 
-    def doStartCourse(self,course : dict):
+    def doStartCourse(self, course_dict: dict):
+        print(course_dict)
+        course = service.course.Course(**course_dict)
         try:
-            if course is not None or course["status"] ==0:
-                logger.info('Select Failed, selected course is None Or course is not time' % course["course_name"])
+            if course is None or course.status == 0:
+                logger.info('Select Failed, selected course is None Or course is not in time')
                 return {
                     'success': False,
                     'message': 'Course status Error'
                 }
             else:
-                logger.info('Select successfully, selected course is:' % course.course_name)
-            # ! 跳转
+                logger.info(f'Select successfully, selected course is: {course.course_name}')
+                # ! 跳转
                 courseWindow.hide()
                 view.monitor.getMonitorWindow(course)
                 return {
@@ -54,6 +56,7 @@ class JsAPI:
                 'success': False,
                 'message': str(e)
             }
+
     def logout(self):
         save = user.USER
         save.loginStatus = False
@@ -83,4 +86,3 @@ def getCourseWindow():
                                          js_api=JsAPI())
     courseWindow.events.closed += quitSystem
     return courseWindow
-

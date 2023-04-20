@@ -70,7 +70,9 @@ def quitSystem():
     sys.exit()
 
 
-def getMonitorWindow(course : service.course.course):
+def getMonitorWindow(course: service.course.Course):
+    global COURSE
+    COURSE = course
     from __main__ import SYSTEM_PORT
     global monitorWindow
     monitorWindow = webview.create_window("监控界面",
@@ -82,3 +84,6 @@ def getMonitorWindow(course : service.course.course):
                                           js_api=JsAPI())
     monitorWindow.events.closed += quitSystem
     return monitorWindow
+
+
+COURSE = service.course.Course()
