@@ -76,10 +76,10 @@ def quitSystem():
 def getCourseWindow():
     global courseWindow
     courseWindow = webview.create_window("课程列表",
-                                         "templates/login.html",
-                                         width=440,
-                                         height=440,
-                                         resizable=False,
+                                         "templates/course.html",
+                                         width=1096,
+                                         height=980,
+                                         resizable=True,
                                          js_api=JsAPI())
     courseWindow.events.closed += quitSystem
     return courseWindow
