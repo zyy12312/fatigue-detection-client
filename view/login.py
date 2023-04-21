@@ -54,13 +54,24 @@ class JsAPI:
                 'message': str(e)
             }
 
+    def getUser(self):
+        logger.info("Load User From File")
+        ret = getLoginStatus()
+        if not ret:
+            return None
+        return {
+            'username': ret.username,
+            'password': ret.password,
+            'login': ret.loginStatus
+        }
+
 
 def getLogin():
     global loginWindow
     loginWindow = webview.create_window("登录",
                                         "templates/login.html",
-                                        width=800,
-                                        height=600,
+                                        width=500,
+                                        height=450,
                                         resizable=False,
                                         js_api=JsAPI())
     return loginWindow

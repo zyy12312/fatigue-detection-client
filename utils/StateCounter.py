@@ -5,6 +5,7 @@ import numpy as np
 import requests
 
 import Config
+from service.user import USER, userLogin
 
 
 class StateCounter:
@@ -25,7 +26,6 @@ class StateCounter:
                 self.normal += 1
         elif res['error']['message'] is not None:
             self.leave += 1
-        self.sum += 1
 
     def flush(self):
         s = {
@@ -34,9 +34,12 @@ class StateCounter:
             "end_time": time.time() * 1000,
             "status": int(np.argmax(np.array([self.normal, self.tired, self.leave])))
         }
+        if USER.expire-60 < time.time():
+            userLogin(USER)
+        headers = {"Authorization": USER.token}
         # print(s)
-
-        threading.Thread(target=lambda: requests.post(f"{Config.BASE_URL}/api/v1/subrecords/report", json=s)).start()
+        threading.Thread(target=lambda: requests.post(f"{Config.BASE_URL}/api/v1/subrecords/report", json=s,
+                                                      headers=headers)).start()
         self.leave = 0
         self.normal = 0
         self.tired = 0
