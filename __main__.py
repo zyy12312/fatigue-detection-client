@@ -12,6 +12,4 @@ if __name__ == '__main__':
     logger.info("Program Loading.")
     view.login.getLogin()
 
-    webview.start(debug=DEBUG, http_port=SYSTEM_PORT,http_server=True)
-
-
+    webview.start(debug=True, http_port=SYSTEM_PORT, http_server=True)

@@ -16,21 +16,23 @@ class Course:
 
 
 def getCourseList():
-    ret = requests.post(f"{Config.BASE_URL}/api/v1/records/list",
-                        data=user.USER.token).json()
+    ret = requests.get(f"{Config.BASE_URL}/api/v1/records/list",
+                       headers={
+                           "Authorization": f"Bearer {user.USER.token}"
+                       }).json()
     if ret["code"] == 200:
-        course_list = []
-        for i in ret["data"]["list"]:
-            t = Course(
-                record_id=i["_id"],
-                course_name=i["course"]["course_name"],
-                course_description=i["course"]["description"],
-                teacher_name=i["teacher"]["username"],
-                status=int(i["status"]),
-            )
-            course_list.append(t)
+        # course_list = []
+        # for i in ret["data"]["list"]:
+        #     t = Course(
+        #         record_id=i["_id"],
+        #         course_name=i["course"]["course_name"],
+        #         course_description=i["course"]["description"],
+        #         teacher_name=i["teacher"]["username"],
+        #         status=int(i["status"]),
+        #     )
+        #     course_list.append(t.__dict__)
         # u.loginStatus = True
         # u.expire = ret["data"]["expire"] // 1000
-        return course_list
+        return ret["data"]["list"]
     else:
         raise Exception("网络请求出错")

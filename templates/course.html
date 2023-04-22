@@ -16,9 +16,30 @@
         }
 
         .courses {
-            width: 90%;
+            width: 100%;
             margin: auto auto;
             overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            justify-items: center;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-wrap: wrap;
+        }
+
+        .course {
+            width: fit-content;
+            flex: 0 0 auto;
+            border: 1px solid #ebeef5;
+            background-color: #fff;
+            overflow: hidden;
+            color: #303133;
+            transition: .3s;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
         }
 
         .bottom {
@@ -71,39 +92,65 @@
 <body>
 <div id="app">
     <div class="welcome">
-        欢迎您，<span>{{username}}</span>&nbsp;
+        欢迎您，<span>{{ username }}</span>&nbsp;
         <el-button link type="primary" @click="logout">登出</el-button>
     </div>
     <div class="courses">
-        <el-row v-for="courseRow in reshapedCourse">
-            <el-col :span="8" v-for="course in courseRow">
-                <el-card :body-style="{ padding: '0px' }" class="course">
-                    <div style="padding: 14px;">
-                        <h3 class="card-title">{{course.course_name}}</h3>
-                        <p class="card-passage" style="min-height: 30%;">
-                            <strong style="color: black">课程描述：</strong><br>{{course.course_description}}
-                        </p>
-                        <p class="card-passage"><strong style="color: black">老师：</strong>{{course.teacher_name}}</p>
-                        <div class="bottom clearfix">
-                            <el-button v-if="course.status" type="text" class="button"
-                                       @click="doStartLesson(course.record_id)">
-                                进入课程
-                            </el-button>
-                            <el-button v-else type="text" class="button" style="color: gray">进入课程</el-button>
-                        </div>
-                    </div>
-                </el-card>
+        <!--<el-row v-for="courseRow in reshapedCourse">
+        <el-col :span="8" v-for="course in courseList">-->
+        <div v-for="course in courseList" v-bind:key="course._id" class="course">
+            <div style="padding: 14px;">
+                <h3 class="card-title">{{ course.course.course_name }}</h3>
+                <p class="card-passage">
+                    <b style="color: black">课程描述：</b><br>{{ course.course.description }}
+                </p>
+                <p class="card-passage"><strong style="color: black">老师：</strong>
+                    <span>{{ course.teacher.username }}</span>
+                    <span v-if="course.teacher.name">({{ course.teacher.name }})</span>
+                </p>
+                <p class="card-passage"><strong style="color: black">开始时间：</strong>
+                    <span>{{ formatDate(course.start_time) }}</span>
+                </p>
+                <p class="card-passage"><strong style="color: black">截止时间：</strong>
+                    <span>{{ formatDate(course.end_time) }}</span>
+                </p>
+                <p class="card-passage"><strong style="color: black">课程状态：</strong>
+                    <el-tag type="primary" v-if="course.status===0">未开始</el-tag>
+                    <el-tag type="success" v-if="course.status===1">进行中</el-tag>
+                    <el-tag type="info" v-if="course.status===2">已结束</el-tag>
+                </p>
+                <div class="bottom clearfix">
+                    <el-button v-if="course.status===1" type="text" class="button"
+                               @click="doStartLesson(course._id)">
+                        进入课程
+                    </el-button>
+                    <el-popover
+                            title="提示"
+                            :width="200"
+                            trigger="hover"
+                            content="课程尚未开始，请耐心等待。"
+                            v-if="course.status===0"
+                    >
+                        <template #reference>
+                            <el-button type="text" class="button" disabled>进入课程</el-button>
+                        </template>
+                    </el-popover>
+                </div>
+            </div>
+        </div>
+        <!--
             </el-col>
-        </el-row>
+            </el-row>-->
     </div>
 </div>
 <script>
     document.oncontextmenu = () => false;
     const App = {
         async mounted() {
+            /*this.courseList = [this.courseList[0], this.courseList[0], this.courseList[0], this.courseList[0]
+                , this.courseList[0], this.courseList[0], this.courseList[0], this.courseList[0]]*/
             window.addEventListener('pywebviewready', async () => {
-                this.courseList = await pywebview.api.getCourseList()
-                this.reshapedCourse = this.reshape(this.courseList, 3)
+                this.courseList = JSON.parse(await pywebview.api.getCourseList());
                 this.userData = await pywebview.api.getUser()
                 this.username = this.userData.username
             })
@@ -112,41 +159,20 @@
             return {
                 username: 'Loading',
                 courseList: [],
-                reshapedCourse: [[{
-                    "record_id": "1",
-                    "course_name": "高等元素论",
-                    "course_description": "    在这种不可避免的冲突下，我们必须解决这个问题。\n    要反思高等元素论行为。此时此刻，我对自己的内心进行了很多的思考。\n    种下什么样的因就会得出什么样的果，如果认真一些，就能得到好结果。\n    既然如何, 在这种困难的抉择下, 本人思来想去, 寝食难安.",
-                    "teacher_name": "Amber",
-                    "status": 1
-                }, {
-                    "record_id": "2",
-                    "course_name": "你说得对",
-                    "course_description": "  你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。\n",
-                    "teacher_name": "Albedo",
-                    "status": 0
-                }, {
-                    "record_id": "3",
-                    "course_name": "test1",
-                    "course_description": "1111111",
-                    "teacher_name": "Gin",
-                    "status": 1
-                }], [{
-                    "record_id": "4",
-                    "course_name": "test1",
-                    "course_description": "1111111",
-                    "teacher_name": "Tighnari",
-                    "status": 0
-                }, {
-                    "record_id": "5",
-                    "course_name": "test1",
-                    "course_description": "1111111",
-                    "teacher_name": "Teriri",
-                    "status": 1
-                }]],
                 userData: null
             };
         },
         methods: {
+            formatDate: function (timestamp) {
+                const date = new Date(timestamp)
+                const year = date.getFullYear()
+                const month = ('0' + (date.getMonth() + 1)).slice(-2)
+                const day = ('0' + date.getDate()).slice(-2)
+                const hours = ('0' + date.getHours()).slice(-2)
+                const minutes = ('0' + date.getMinutes()).slice(-2)
+                const seconds = ('0' + date.getSeconds()).slice(-2)
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+            },
             reshape: function (arr, column_size) {
                 ret = []
                 tmp = []
@@ -169,7 +195,8 @@
             doStartLesson: function (courseId) {
                 //console.log(courseId)
                 for (const course of this.courseList) {
-                    if (course.record_id === courseId) {
+
+                    if (course._id === courseId) {
                         pywebview.api.doStartCourse(course)
                         return
                     }
@@ -182,6 +209,7 @@
         }
     }
     const app = Vue.createApp(App);
+
     app.use(ElementPlus);
     app.mount("#app");
 </script>

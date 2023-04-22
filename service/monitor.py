@@ -36,10 +36,13 @@ class VideoCamera(object):
     def get_frame(self):
         success, image = self.cap.read()
         res, image = self.fatigue_detection.check_picture(image)
+        self.stateCounter.countTimes(res)
+
         logger.info(res)
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
-
+    def sendResult(self):
+        self.stateCounter.flush()
 
 def getFlaskThread(camera):
     def getApp():
@@ -74,6 +77,7 @@ def getFlaskThread(camera):
 
 def startMonitoring(cameraId):
     camera = VideoCamera(cameraId, view.monitor.COURSE.record_id)
+    threading.Timer(0.4, camera.sendResult(), ()).start()
     # todo
     port = getFlaskThread(camera)
     return "http://127.0.0.1:" + str(port)

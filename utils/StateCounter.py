@@ -34,8 +34,9 @@ class StateCounter:
             "end_time": time.time() * 1000,
             "status": int(np.argmax(np.array([self.normal, self.tired, self.leave])))
         }
-        if USER.expire-60 < time.time():
-            userLogin(USER)
+        print(s)
+        # if USER.expire-60 < time.time():
+        #     userLogin(USER)
         headers = {"Authorization": USER.token}
         # print(s)
         threading.Thread(target=lambda: requests.post(f"{Config.BASE_URL}/api/v1/subrecords/report", json=s,

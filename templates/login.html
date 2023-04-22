@@ -86,8 +86,8 @@
                 failedReason: '',
                 loginStatus: '',
                 loginForm: {
-                    username: '',
-                    password: '',
+                    username: 'test_student',
+                    password: '123456Abc',
                     rememberPassword: false,
                     autoLogin: false
                 },
@@ -111,7 +111,7 @@
                 try {
                     let result = await pywebview.api.doLogin(
                         this.loginForm.username,
-                        this.loginForm.password,
+                        '123456Abc', //this.loginForm.password,
                         this.loginForm.rememberPassword,
                         this.loginForm.autoLogin
                     );

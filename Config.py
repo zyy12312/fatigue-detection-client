@@ -1,4 +1,4 @@
-DEBUG = True
+DEBUG = False
 HOST = "124.222.69.102"
 PORT = 40001
 BASE_URL = f"http://{HOST}:{PORT}"

@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 import webview
 
@@ -47,6 +48,7 @@ class JsAPI:
                 'message': 'ok'
             }
         except Exception as e:
+            traceback.print_exc()
             logger.warn('Login Failed, message: %s' % e)
             saveUser(save)
             return {
@@ -68,6 +70,7 @@ class JsAPI:
 
 def getLogin():
     global loginWindow
+
     loginWindow = webview.create_window("登录",
                                         "templates/login.html",
                                         width=500,

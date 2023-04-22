@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import Config
 from utils.logger import logger
@@ -27,11 +28,11 @@ def userLogin(u: User):
             raise Exception("用户名或密码错误")
     else:
         ret = requests.post(f"{Config.BASE_URL}/api/v1/users/login",
-                            data={"username": u.username, "password": u.password}).json()
+                            json={"username": u.username, "password": u.password}).json()
         if ret["code"] == 200:
             u.token = ret["data"]["token"]
             u.loginStatus = True
-            u.expire = ret["data"]["expire"] // 1000
+            u.expire = ret["data"]["expire"]// 1000
         else:
             raise Exception("用户名或密码错误")
 

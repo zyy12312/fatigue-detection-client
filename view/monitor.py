@@ -78,9 +78,10 @@ def quitSystem():
     sys.exit()
 
 
-def getMonitorWindow(course: service.course.Course):
+def getMonitorWindow(record_id):
     global COURSE
-    COURSE = course
+    COURSE = service.course.Course()
+    COURSE.record_id = record_id
     from __main__ import SYSTEM_PORT
     global monitorWindow
     monitorWindow = webview.create_window("监控界面",

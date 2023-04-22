@@ -1,3 +1,4 @@
+import json
 import sys
 
 import webview
@@ -23,7 +24,8 @@ class JsAPI:
         ret = service.course.getCourseList()
         if not ret:
             return None
-        return ret.json()
+        print(json.dumps(ret))
+        return json.dumps(ret)
 
     def getUser(self):
         return {
@@ -31,9 +33,16 @@ class JsAPI:
             'token': user.USER.token
         }
 
-    def doStartCourse(self, course_dict: dict):
+    def doStartCourse(self, record_id):
         #print(course_dict)
-        course = service.course.Course(**course_dict)
+        #course = service.course.Course(**course_dict)
+        courseWindow.hide()
+
+        view.monitor.getMonitorWindow(record_id)
+        return {
+            'success': True,
+            'message': 'ok'
+        }
         try:
             if course is None or course.status == 0:
                 logger.info('Select Failed, selected course is None Or course is not in time')
@@ -45,6 +54,7 @@ class JsAPI:
                 logger.info(f'Select successfully, selected course is: {course.course_name}')
                 # ! 跳转
                 courseWindow.hide()
+
                 view.monitor.getMonitorWindow(course)
                 return {
                     'success': True,
