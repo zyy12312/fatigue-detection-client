@@ -22,6 +22,7 @@ def userLogin(u: User):
         if u.username == 'admin' and u.password == '123456':
             u.token = 'token'
             u.loginStatus = True
+            u.expire = time.time() + 3600 * 12
         else:
             raise Exception("用户名或密码错误")
     else:

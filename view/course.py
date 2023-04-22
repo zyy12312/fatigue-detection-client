@@ -32,7 +32,7 @@ class JsAPI:
         }
 
     def doStartCourse(self, course_dict: dict):
-        print(course_dict)
+        #print(course_dict)
         course = service.course.Course(**course_dict)
         try:
             if course is None or course.status == 0:
@@ -80,8 +80,8 @@ def getCourseWindow():
     global courseWindow
     courseWindow = webview.create_window("课程列表",
                                          "templates/course.html",
-                                         width=1096,
-                                         height=980,
+                                         width=2560,
+                                         height=1600,
                                          resizable=True,
                                          js_api=JsAPI())
     courseWindow.events.closed += quitSystem

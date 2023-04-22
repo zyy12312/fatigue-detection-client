@@ -51,8 +51,10 @@
 <body>
 <div id="app">
     <div class="welcome">
-        欢迎您，<span>{{username}}</span>&nbsp;
+        欢迎您，<span><strong>{{username}}</strong></span>
         <el-button link type="primary" @click="logout">登出</el-button>
+        正在进行: <span><strong>{{course_name}}</strong></span>
+        <el-button link type="primary" @click="back">切换课程</el-button>
     </div>
     <div class="video-frame">
         <el-image :src="vidSrc" class="video" fit="contain">
@@ -86,17 +88,21 @@
                 this.cameras = await pywebview.api.getCameraList();
                 this.userData = await pywebview.api.getUser();
                 this.username = this.userData.username;
+                this.course = await pywebview.api.getCourse();
+                this.course_name = this.course.course_name;
             })
         },
         data() {
             return {
                 username: 'Loading',
+                course_name: 'Loading',
                 vidSrc: '',
                 cameras: [],
                 cameraId: null,
                 startLoading: false,
                 stopLoading: false,
-                userData: null
+                userData: null,
+                course: null
             };
         },
         methods: {
@@ -123,6 +129,10 @@
             },
             logout() {
                 pywebview.api.logout();
+            },
+            back() {
+                stop();
+                pywebview.api.back();
             }
         }
     };

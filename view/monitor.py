@@ -8,6 +8,7 @@ from config.data import DEBUG
 import service.monitor as monitor
 import service.user as user
 from utils.logger import logger
+import view.course
 
 monitorWindow: webview.Window
 
@@ -62,6 +63,13 @@ class JsAPI:
         monitorWindow.events.closed -= quitSystem
         monitorWindow.destroy()
 
+    def getCourse(self):
+        return COURSE.__dict__
+
+    def back(self):
+        monitorWindow.hide()
+        view.course.getCourseWindow()
+
 
 def quitSystem():
     logger.info("Close Button Pressed, System Closing...")
@@ -78,8 +86,8 @@ def getMonitorWindow(course: service.course.Course):
     monitorWindow = webview.create_window("监控界面",
                                           html="<script>location.href='http://127.0.0.1:{}/monitor.html'</script>".format(
                                               SYSTEM_PORT),
-                                          width=800,
-                                          height=800,
+                                          width=2048,
+                                          height=1600,
                                           resizable=True,
                                           js_api=JsAPI())
     monitorWindow.events.closed += quitSystem
