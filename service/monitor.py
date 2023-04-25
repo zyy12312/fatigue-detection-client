@@ -37,15 +37,13 @@ class VideoCamera(object):
         success, image = self.cap.read()
         res, image = self.fatigue_detection.check_picture(image)
         self.stateCounter.countTimes(res)
-
-        logger.info(res)
+        # logger.info(res)
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
 
     def sendResult(self):
         self.stateCounter.flush()
-        threading.Timer(5
-                        , self.sendResult, ()).start()
+        threading.Timer(5, self.sendResult, ()).start()
 
 
 def getFlaskThread(camera):
@@ -77,6 +75,9 @@ def getFlaskThread(camera):
     CAPTURE_THREAD.start()
     logger.info("Get Flask Instance on 127.0.0.1:" + str(port))
     return port
+
+
+
 
 
 def startMonitoring(cameraId):
