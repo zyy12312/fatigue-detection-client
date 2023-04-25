@@ -65,7 +65,10 @@ def getToken():
     if not USER.loginStatus:
         return ''
     return USER.token
-
+def getExpire():
+    if not USER.loginStatus:
+        return ''
+    return USER.expire
 
 updateToken = userLogin
 USER = User()

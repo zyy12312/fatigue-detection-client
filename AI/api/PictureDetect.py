@@ -13,7 +13,7 @@ from .. import utils
 import torch.backends.cudnn as cudnn
 import time
 
-MODEL_PATH = '../weights/ssd_voc_5000_plus.pth'
+MODEL_PATH = '../weights/fatigue_detection_model.pth'
 
 monitorWindow: webview.Window
 

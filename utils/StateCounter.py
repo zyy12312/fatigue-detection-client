@@ -1,3 +1,4 @@
+import json
 import threading
 import time
 
@@ -5,16 +6,16 @@ import numpy as np
 import requests
 
 import Config
-from service.user import USER, userLogin
+from service.user import USER, userLogin, getToken, getExpire
 
 
 class StateCounter:
-    def __init__(self, recordId: str):
+    def __init__(self, record):
         self.tired = 0
         self.leave = 0
         self.normal = 0
         # self.sum = 0
-        self.record = recordId
+        self.record = record
         self.start_time = time.time() * 1000
 
     def countTimes(self, res):
@@ -28,19 +29,21 @@ class StateCounter:
             self.leave += 1
 
     def flush(self):
+        print(self.record)
         s = {
-            "record_id": self.record,
+            "record_id": self.record.get('_id'),
             "start_time": self.start_time,
             "end_time": time.time() * 1000,
             "status": int(np.argmax(np.array([self.normal, self.tired, self.leave])))
         }
-        print(s)
-        # if USER.expire-60 < time.time():
-        #     userLogin(USER)
-        headers = {"Authorization": USER.token}
-        # print(s)
-        threading.Thread(target=lambda: requests.post(f"{Config.BASE_URL}/api/v1/subrecords/report", json=s,
-                                                      headers=headers)).start()
+        if getExpire() - 60 < time.time():
+            # userLogin()
+            print("Expired")
+        headers = {"Authorization": f"Bearer {getToken()}"}
+        print("post", s)
+        ret = requests.post(f"{Config.BASE_URL}/api/v1/subrecords/report", json=s,
+                            headers=headers)
+        print("Result", ret.text)
         self.leave = 0
         self.normal = 0
         self.tired = 0

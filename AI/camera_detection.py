@@ -31,7 +31,7 @@ def Yawn(list_Y, list_y1):
 net = SSD()
 net = torch.nn.DataParallel(net)
 net.train(mode=False)
-net.load_state_dict(torch.load('./weights/ssd_voc_5000_plus.pth', map_location=lambda storage, loc: storage))
+net.load_state_dict(torch.load('./weights/fatigue_detection_model.pth', map_location=lambda storage, loc: storage))
 if torch.cuda.is_available():
 	net = net.cuda()
 	cudnn.benchmark = True

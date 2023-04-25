@@ -24,7 +24,7 @@ def getCameraList():
 class VideoCamera(object):
     def __init__(self, camera, record_id):
         logger.info({"camera": camera, "record_id": record_id})
-        self.fatigue_detection = FatigueDetection(carry_img=True, model_path="./weights/ssd_voc_5000_plus.pth")
+        self.fatigue_detection = FatigueDetection(carry_img=True, model_path="./weights/fatigue_detection_model.pth")
         self.stateCounter = StateCounter(record_id)
         logger.info("Start Video Capture on Camera-" + str(camera))
         self.cap = cv2.VideoCapture(camera)
@@ -41,8 +41,12 @@ class VideoCamera(object):
         logger.info(res)
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
+
     def sendResult(self):
         self.stateCounter.flush()
+        threading.Timer(5
+                        , self.sendResult, ()).start()
+
 
 def getFlaskThread(camera):
     def getApp():
@@ -77,7 +81,7 @@ def getFlaskThread(camera):
 
 def startMonitoring(cameraId):
     camera = VideoCamera(cameraId, view.monitor.COURSE.record_id)
-    threading.Timer(0.4, camera.sendResult(), ()).start()
+    threading.Timer(5, camera.sendResult, ()).start()
     # todo
     port = getFlaskThread(camera)
     return "http://127.0.0.1:" + str(port)
