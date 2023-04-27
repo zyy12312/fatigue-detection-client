@@ -29,8 +29,8 @@
         }
 
         .course {
-            width: fit-content;
-            flex: 0 0 auto;
+            width: 20%;
+            flex: auto 0 0;
             border: 1px solid #ebeef5;
             background-color: #fff;
             overflow: hidden;
@@ -40,6 +40,11 @@
             border-radius: 5px;
             padding: 10px;
             margin: 10px;
+        }
+
+        .course-description{
+            height: 200px;
+            overflow: auto;
         }
 
         .bottom {
@@ -101,7 +106,7 @@
         <div v-for="course in courseList" v-bind:key="course._id" class="course">
             <div style="padding: 14px;">
                 <h3 class="card-title">{{ course.course.course_name }}</h3>
-                <p class="card-passage">
+                <p class="card-passage course-description">
                     <b style="color: black">课程描述：</b><br>{{ course.course.description }}
                 </p>
                 <p class="card-passage"><strong style="color: black">老师：</strong>
